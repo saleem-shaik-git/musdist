@@ -13,14 +13,13 @@ export class SessionGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<{ cookies?: Record<string, string>; user?: unknown }>();
     const token = request.cookies?.[SESSION_COOKIE];
     if (!token) throw new UnauthorizedException();
-    const now = new Date();
     const rows = await this.db.select({ userId: users.id, email: users.email })
       .from(sessions)
       .innerJoin(users, eq(users.id, sessions.userId))
-      .where(and(eq(sessions.tokenHash, hashToken(token)), isNull(sessions.revokedAt), gt(sessions.expiresAt, now)))
+      .where(and(eq(sessions.tokenHash, hashToken(token)), isNull(sessions.revokedAt), gt(sessions.expiresAt, new Date())))
       .limit(1);
     if (!rows[0]) throw new UnauthorizedException();
-    request.user = rows[0];
+    request.user = { id: rows[0].userId, email: rows[0].email };
     return true;
   }
 }
