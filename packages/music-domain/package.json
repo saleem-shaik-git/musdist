@@ -1,0 +1,8 @@
+{
+  "name": "@musdist/music-domain",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/distribution-provider.ts"
+  }
+}
