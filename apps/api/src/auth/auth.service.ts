@@ -1,13 +1,12 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { createHash, randomBytes } from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { users } from '@musdist/database';
 import type { Database } from '@musdist/database';
 import { hashPassword, verifyPassword } from './password';
 import { SESSION_TTL_SECONDS } from './auth.constants';
+import { createSessionToken, hashToken } from './token';
 
 function normalizeEmail(email: string): string { return email.trim().toLowerCase(); }
-function hashToken(token: string): string { return createHash('sha256').update(token).digest('hex'); }
 
 @Injectable()
 export class AuthService {
@@ -30,7 +29,7 @@ export class AuthService {
   }
 
   createSessionToken(): { token: string; tokenHash: string; expiresAt: Date } {
-    const token = randomBytes(32).toString('base64url');
+    const token = createSessionToken();
     return { token, tokenHash: hashToken(token), expiresAt: new Date(Date.now() + SESSION_TTL_SECONDS * 1000) };
   }
 }
