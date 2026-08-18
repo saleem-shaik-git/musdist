@@ -1,0 +1,14 @@
+{
+  "name": "musdist",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
+  "scripts": {
+    "dev": "pnpm --parallel --filter @musdist/api --filter @musdist/web dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "db:generate": "pnpm --filter @musdist/database db:generate",
+    "db:migrate": "pnpm --filter @musdist/database db:migrate",
+    "db:push": "pnpm --filter @musdist/database db:push"
+  }
+}
